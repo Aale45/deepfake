@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deepfake Detective | AI Detection Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <nav>
+        <div class="logo">
+<img src="https://i.ibb.co/Hp1j1f0b/make-a-logo-for-my-project-of-deepfake-detective-as-title-use-a-eye-and-keep-a-detective-hat-above-t.png" alt="Detective Icon" />
+            <h1>DEEPFAKE DETECTIVE</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="title-container">
+<img src="https://i.ibb.co/Hp1j1f0b/make-a-logo-for-my-project-of-deepfake-detective-as-title-use-a-eye-and-keep-a-detective-hat-above-t.png" alt="Detective Icon" style="height: 60px;" />
+            <h1>DEEPFAKE DETECTIVE</h1>
+        </div>
+        <p class="description">
+            Deepfake Detective is an advanced AI-powered tool for detecting manipulated media.
+            Easily verify whether images, videos, or audio clips are genuine or AI-generated
+            with our simple and efficient detection system.
+        </p>
+    </header>
+
+    <div class="demo-images">
+        <img src="https://miro.medium.com/v2/resize:fit:1400/0*n1wP64r4k3PUfZoA.jpg" alt="AI Generated Example" class="demo-image" />
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOcoxj1ev1H_00Jp6FaD8TlOfzHRKUamoW9Q&s" alt="AI Generated Example" class="demo-image" />
+        <img src="https://www.aimtechnologies.co/wp-content/uploads/2023/06/AI-Image-Recognition.png" alt="AI Generated Example" class="demo-image" />
+    </div>
+
+    <div class="upload-container">
+        <div class="upload-box" id="uploadBox">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <input type="file" accept="image/*" id="imageUpload" class="file-input" />
+            <label for="imageUpload" class="upload-label">Upload Image to Analyze</label>
+            <p>Supported formats: JPG, PNG, WEBP (Max 10MB)</p>
+            <button class="cta-button" id="analyzeButton">Analyze Now</button>
+        </div>
+    </div>
+
+    <div class="loading-indicator" id="loadingIndicator">
+        <i class="fas fa-spinner loading-spinner"></i>
+        <p>Analyzing your image...</p>
+    </div>
+
+    <div class="results-container" id="resultsContainer">
+        <h2 class="results-title">Analysis Results</h2>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <img id="resultImage" class="demo-image" style="max-width: 300px;" />
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">Authenticity</div>
+            <div class="result-value" id="authenticityValue">Loading...</div>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">Confidence Level</div>
+            <div class="confidence-meter">
+                <div class="confidence-level" id="confidenceLevel"></div>
+            </div>
+            <div class="result-value" id="confidenceValue"></div>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">AI Manipulation Indicators</div>
+            <div class="result-value" id="indicatorsValue"></div>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">Likely Source</div>
+            <div class="result-value" id="sourceValue"></div>
+        </div>
+
+        <div class="result-item">
+            <div class="result-label">Analysis Summary</div>
+            <div class="result-value" id="summaryValue"></div>
+        </div>
+    </div>
+
+    <div class="coming-soon">
+        <h3 class="coming-soon-title">Coming Soon Features</h3>
+        <div class="feature-item">
+            <i class="fas fa-video feature-icon"></i>
+            <span>Video Deepfake Detection</span>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-microphone feature-icon"></i>
+            <span>Audio Deepfake Detection</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Deepfake Detective | Advanced AI Verification Technology</p>
+        <p class="creator">Created by Mohammed Ali</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadBox = document.getElementById('uploadBox');
+            const fileInput = document.getElementById('imageUpload');
+            const analyzeButton = document.getElementById('analyzeButton');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultImage = document.getElementById('resultImage');
+            const authenticityValue = document.getElementById('authenticityValue');
+            const confidenceLevel = document.getElementById('confidenceLevel');
+            const confidenceValue = document.getElementById('confidenceValue');
+            const indicatorsValue = document.getElementById('indicatorsValue');
+            const sourceValue = document.getElementById('sourceValue');
+            const summaryValue = document.getElementById('summaryValue');
+
+            // Handle file selection
+            fileInput.addEventListener('change', function (e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        uploadBox.innerHTML = `
+                            <img src="${event.target.result}" class="demo-image" style="max-height: 150px; margin-bottom: 1rem;">
+                            <p>${fileInput.files[0].name}</p>
+                            <button class="cta-button" id="analyzeButton">Analyze Now</button>
+                        `;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Handle form submission
+            analyzeButton.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please select an image first');
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Show loading state
+                loadingIndicator.style.display = 'block';
+                resultsContainer.style.display = 'none';
+                uploadBox.style.display = 'none';
+
+                try {
+            // Call backend API for real detection
+            fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const results = data.results;
+                    resultImage.src = URL.createObjectURL(file);
+                    authenticityValue.textContent = results.is_fake ? 'Fake' : 'Real';
+                    authenticityValue.style.color = results.is_fake ? 'var(--danger)' : 'var(--success)';
+
+                    const confidencePercent = Math.round(results.confidence * 100);
+                    confidenceLevel.style.width = `${confidencePercent}%`;
+                    confidenceValue.textContent = `${confidencePercent}% Confidence`;
+
+                    const indicators = results.indicators;
+                    const detectedIndicators = Object.values(indicators).filter(x => x).length;
+                    indicatorsValue.textContent = `${detectedIndicators}/${Object.keys(indicators).length} Detected`;
+
+                    sourceValue.textContent = results.likely_source;
+                    summaryValue.textContent = results.is_fake
+                        ? 'This image shows multiple signs of AI manipulation'
+                        : 'No significant signs of manipulation detected';
+
+                    loadingIndicator.style.display = 'none';
+                    resultsContainer.style.display = 'block';
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(data.error || 'Detection failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loadingIndicator.style.display = 'none';
+                uploadBox.style.display = 'block';
+                alert('An error occurred during analysis. Please try again.');
+            });
+                } catch (error) {
+                    console.error('Error:', error);
+                    loadingIndicator.style.display = 'none';
+                    uploadBox.style.display = 'block';
+                    alert('An error occurred during analysis. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
